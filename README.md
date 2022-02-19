@@ -51,3 +51,8 @@ fun loginComponent(): LoginComponent.Factory
 本 sample code 示例参考：
 
 https://github.com/googlecodelabs/android-dagger/tree/solution
+
+If you want to study dagger-android, please fetch `feature/dagger-android` branch.
+
+Thanks for your reading.
+
