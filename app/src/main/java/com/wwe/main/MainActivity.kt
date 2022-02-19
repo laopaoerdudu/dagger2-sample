@@ -9,6 +9,7 @@ import com.wwe.MyApplication
 import com.wwe.R
 import com.wwe.login.LoginActivity
 import com.wwe.registration.RegistrationActivity
+import com.wwe.settings.SettingsActivity
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -56,7 +57,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupViews() {
         findViewById<TextView>(R.id.hello).text = mainViewModel.welcomeText
         findViewById<Button>(R.id.settings).setOnClickListener {
-            //startActivity(Intent(this, SettingsActivity::class.java))
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
     }
 }
