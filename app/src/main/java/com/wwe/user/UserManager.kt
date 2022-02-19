@@ -58,7 +58,7 @@ class UserManager @Inject constructor(
         logout()
     }
 
-    private fun logout() {
+    fun logout() {
         // When the user logs out, we remove the instance of UserComponent from memory
         userComponent = null
     }

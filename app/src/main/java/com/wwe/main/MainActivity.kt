@@ -1,14 +1,14 @@
 package com.wwe.main
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.wwe.MyApplication
 import com.wwe.R
+import com.wwe.login.LoginActivity
 import com.wwe.registration.RegistrationActivity
-import com.wwe.user.UserManager
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, RegistrationActivity::class.java))
                 finish()
             } else {
-                //startActivity(Intent(this, LoginActivity::class.java))
+                startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             }
         } else {

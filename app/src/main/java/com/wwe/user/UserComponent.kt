@@ -1,6 +1,7 @@
 package com.wwe.user
 
 import com.wwe.main.MainActivity
+import com.wwe.settings.SettingsActivity
 import dagger.Subcomponent
 
 // Scope annotation that the UserComponent uses
@@ -16,5 +17,5 @@ interface UserComponent {
     }
 
     fun inject(activity: MainActivity)
-    // fun inject(activity: SettingsActivity) TODO: update in next phase
+    fun inject(activity: SettingsActivity)
 }

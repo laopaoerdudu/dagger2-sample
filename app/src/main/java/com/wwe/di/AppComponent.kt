@@ -1,6 +1,7 @@
 package com.wwe.di
 
 import android.content.Context
+import com.wwe.login.LoginComponent
 import com.wwe.registration.RegistrationComponent
 import com.wwe.user.UserManager
 import dagger.BindsInstance
@@ -22,4 +23,5 @@ interface AppComponent {
 
     fun userManager(): UserManager
     fun registrationComponent(): RegistrationComponent.Factory
+    fun loginComponent(): LoginComponent.Factory
 }
