@@ -13,20 +13,27 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
+    // @Inject annotated fields will be provided by Dagger
     @Inject
     lateinit var mainViewModel: MainViewModel
 
+    /**
+     * If the User is not registered, RegistrationActivity will be launched,
+     * If the User is not logged in, LoginActivity will be launched,
+     * else carry on with MainActivity.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         // Grabs instance of UserManager from the application graph
-       val userManager = (application as MyApplication).appComponent.userManager()
+        val userManager = (application as MyApplication).appComponent.userManager()
         if (!userManager.isUserLoggedIn()) {
             if (!userManager.isUserRegistered()) {
                 startActivity(Intent(this, RegistrationActivity::class.java))
                 finish()
             } else {
-//                startActivity(Intent(this, LoginActivity::class.java))
-//                finish()
+                //startActivity(Intent(this, LoginActivity::class.java))
+                finish()
             }
         } else {
             setContentView(R.layout.activity_main)
