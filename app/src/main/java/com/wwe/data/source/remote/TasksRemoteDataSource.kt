@@ -18,7 +18,7 @@ object TasksRemoteDataSource : TasksDataSource {
 
     private const val SERVICE_LATENCY_IN_MILLIS = 2000L
 
-    private var TASKS_SERVICE_DATA = LinkedHashMap<String, Task>(2)
+    private var TASKS_SERVICE_DATA_MAP = LinkedHashMap<String, Task>(2)
 
     init {
         addTask("Build tower in Pisa", "Ground looks good, no foundation work required.")
@@ -41,6 +41,7 @@ object TasksRemoteDataSource : TasksDataSource {
     }
 
     override fun observeTask(taskId: String): LiveData<Result<Task>> {
+        // MutableLiveData<Result<List<Task>>>()
         return observableTasks.map { tasks ->
             when (tasks) {
                 is Result.Loading -> Result.Loading
@@ -56,7 +57,7 @@ object TasksRemoteDataSource : TasksDataSource {
 
     override suspend fun getTasks(): Result<List<Task>> {
         // Simulate network by delaying the execution.
-        val tasks = TASKS_SERVICE_DATA.values.toList()
+        val tasks = TASKS_SERVICE_DATA_MAP.values.toList()
         delay(SERVICE_LATENCY_IN_MILLIS)
         return Success(tasks)
     }
@@ -64,7 +65,7 @@ object TasksRemoteDataSource : TasksDataSource {
     override suspend fun getTask(taskId: String): Result<Task> {
         // Simulate network by delaying the execution.
         delay(SERVICE_LATENCY_IN_MILLIS)
-        TASKS_SERVICE_DATA[taskId]?.let {
+        TASKS_SERVICE_DATA_MAP[taskId]?.let {
             return Success(it)
         }
         return Error(Exception("Task not found"))
@@ -72,16 +73,16 @@ object TasksRemoteDataSource : TasksDataSource {
 
     private fun addTask(title: String, description: String) {
         val newTask = Task(title, description)
-        TASKS_SERVICE_DATA[newTask.id] = newTask
+        TASKS_SERVICE_DATA_MAP[newTask.id] = newTask
     }
 
     override suspend fun saveTask(task: Task) {
-        TASKS_SERVICE_DATA[task.id] = task
+        TASKS_SERVICE_DATA_MAP[task.id] = task
     }
 
     override suspend fun completeTask(task: Task) {
         val completedTask = Task(task.title, task.description, true, task.id)
-        TASKS_SERVICE_DATA[task.id] = completedTask
+        TASKS_SERVICE_DATA_MAP[task.id] = completedTask
     }
 
     override suspend fun completeTask(taskId: String) {
@@ -90,7 +91,7 @@ object TasksRemoteDataSource : TasksDataSource {
 
     override suspend fun activateTask(task: Task) {
         val activeTask = Task(task.title, task.description, false, task.id)
-        TASKS_SERVICE_DATA[task.id] = activeTask
+        TASKS_SERVICE_DATA_MAP[task.id] = activeTask
     }
 
     override suspend fun activateTask(taskId: String) {
@@ -98,16 +99,16 @@ object TasksRemoteDataSource : TasksDataSource {
     }
 
     override suspend fun clearCompletedTasks() {
-        TASKS_SERVICE_DATA = TASKS_SERVICE_DATA.filterValues {
+        TASKS_SERVICE_DATA_MAP = TASKS_SERVICE_DATA_MAP.filterValues {
             !it.isCompleted
         } as LinkedHashMap<String, Task>
     }
 
     override suspend fun deleteAllTasks() {
-        TASKS_SERVICE_DATA.clear()
+        TASKS_SERVICE_DATA_MAP.clear()
     }
 
     override suspend fun deleteTask(taskId: String) {
-        TASKS_SERVICE_DATA.remove(taskId)
+        TASKS_SERVICE_DATA_MAP.remove(taskId)
     }
 }

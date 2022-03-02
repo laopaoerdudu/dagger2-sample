@@ -20,6 +20,7 @@ class TasksLocalDataSource internal constructor(
 ) : TasksDataSource {
 
     override fun observeTasks(): LiveData<Result<List<Task>>> {
+        // LiveData<List<Task>>
         return tasksDao.observeTasks().map {
             Success(it)
         }
