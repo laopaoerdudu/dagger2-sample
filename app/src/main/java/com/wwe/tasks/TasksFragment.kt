@@ -17,7 +17,7 @@ import com.wwe.util.setupSnackbar
 import timber.log.Timber
 
 /**
- * Display a grid of [Task]s. User can choose to view all, active or completed tasks.
+ * Display a grid of [Task]. User can choose to view all, active or completed tasks.
  */
 class TasksFragment : Fragment() {
 
