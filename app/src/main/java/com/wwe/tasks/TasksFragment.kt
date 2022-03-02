@@ -116,6 +116,7 @@ class TasksFragment : Fragment() {
 
     private fun navigateToAddNewTask() {
         val action = TasksFragmentDirections
+                // action_tasksFragment_to_addEditTaskFragment
             .actionTasksFragmentToAddEditTaskFragment(
                 null,
                 resources.getString(R.string.add_task)
@@ -124,6 +125,7 @@ class TasksFragment : Fragment() {
     }
 
     private fun openTaskDetails(taskId: String) {
+        // action_tasksFragment_to_taskDetailFragment
         val action = TasksFragmentDirections.actionTasksFragmentToTaskDetailFragment(taskId)
         findNavController().navigate(action)
     }
