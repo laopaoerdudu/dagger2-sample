@@ -2,6 +2,7 @@ package com.wwe.data.source
 
 import androidx.lifecycle.LiveData
 import com.wwe.data.Task
+import com.wwe.data.Result
 
 interface TasksDataSource {
     fun observeTasks(): LiveData<Result<List<Task>>>

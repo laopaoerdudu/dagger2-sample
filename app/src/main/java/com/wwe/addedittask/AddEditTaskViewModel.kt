@@ -8,9 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.wwe.Event
 import com.wwe.MyApplication
 import com.wwe.R
-import kotlinx.coroutines.launch
 import com.wwe.data.Result.Success
 import com.wwe.data.Task
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel for the Add/Edit screen.

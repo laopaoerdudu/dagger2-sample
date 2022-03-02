@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
+import com.wwe.data.Result
+import com.wwe.data.Result.Error
+import com.wwe.data.Result.Success
 import com.wwe.data.Task
 import com.wwe.data.source.TasksDataSource
 import kotlinx.coroutines.delay
-import com.wwe.data.Result
-import com.wwe.data.Result.Success
-import com.wwe.data.Result.Error
 
 /**
  * Implementation of the data source that adds a latency simulating network.
