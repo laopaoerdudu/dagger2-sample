@@ -1,58 +1,51 @@
-## 构建 Dagger 图的最佳做法
+In Kotlin, a common mechanism for running code asynchronously is coroutines. 
+When testing asynchronous code, you need to make your code deterministic and provide synchronization mechanisms. 
+The following classes and methodologies help with that:
 
-为应用构建 Dagger 图时：
+- Using `runBlockingTest` or `runBlocking`. 
 
-- 创建组件时，您应该考虑什么元素会决定该组件的生命周期。
-
->在本示例中，应用类负责 AppComponent，而 LoginActivity 负责 LoginComponent。
-
-- 请仅在必要时使用作用域限定。过度使用作用域限定可能会对应用的运行时性能产生负面影响： 
+>Note that since `runBlocking` is not part of the `kotlinx-coroutines-test library`, 
+> you do not need to use the `@ExperimentalCoroutinesApi` annotation.
+>`runBlocking`, which is used when you need to use coroutines in your test doubles as opposed to your test classes. 
+> Using `runBlocking` looks very similar to `runBlockingTest`, as you wrap it around a code block to use it. 
+> Both `runBlocking` and `runBlockingTest` block the current thread and wait until any associated coroutines launched in the lambda complete.
   
->只要组件在内存中，对象就会在内存中；获取限定作用域的对象的成本更高。当 Dagger 提供对象时，它使用 DoubleCheck 锁定，
->而不是 factory 类型提供程序。
+- Using `TestCoroutineDispatcher` for local tests.
 
-如需告知 Dagger LoginComponent 是 ApplicationComponent 的子组件，您必须通过以下方式予以指明：
+- Pausing coroutine execution to test the state of the code at an exact place in time.
 
-- 创建新的 Dagger 模块（例如 SubcomponentsModule），并将子组件的类传递给注释的 subcomponents 属性。
-
-```
-// The "subcomponents" attribute in the @Module annotation tells Dagger what
-// Subcomponents are children of the Component this module is included in.
-@Module(subcomponents = LoginComponent::class)
-class SubcomponentsModule {}
-```
-
-- 将新模块（即 SubcomponentsModule）添加到 ApplicationComponent：
+`app/build.gradle`
 
 ```
-// Including SubcomponentsModule, tell ApplicationComponent that
-// LoginComponent is its subcomponent.
-@Singleton
-@Component(modules = [NetworkModule::class, SubcomponentsModule::class])
-interface ApplicationComponent {
-}
+// Dependencies for Android instrumented unit tests
+androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
 ```
 
->请注意，ApplicationComponent 不再需要注入 LoginActivity，因为现在由 LoginComponent 负责注入，因此您可以从 ApplicationComponent 中移除 inject() 方法。
-ApplicationComponent 的使用者需要知道如何创建 LoginComponent 的实例。父组件必须在其接口中添加方法，确保使用者能够根据父组件的实例创建子组件的实例：
+`kotlinx-coroutines-test` is an experimental library for testing coroutines. 
+It includes utilities for testing coroutines, including runBlockingTest.
 
-- 提供在接口中创建 LoginComponent 实例的 factory：
+You must use `runBlockingTest` whenever you want to run a coroutine from a test. 
+Usually, this is when you need to call a suspend function from a test.
 
-```
-@Singleton
-@Component(modules = [NetworkModule::class, SubcomponentsModule::class])
-interface ApplicationComponent {
-// This function exposes the LoginComponent Factory out of the graph so consumers
-// can use it to obtain new instances of LoginComponent
-fun loginComponent(): LoginComponent.Factory
-}
-```
+To use `runBlockingTest` you:
 
-本 sample code 示例参考：
+- Annotate the function or class with `@ExperimentalCoroutinesApi`.
 
-https://github.com/googlecodelabs/android-dagger/tree/solution
+- Wrap the code calling the suspend function with runBlockingTest.
 
-If you want to study dagger-android, please fetch `feature/dagger-android` branch.
+When you use any functions from `kotlinx-coroutines-test`, annotate the class or function with `@ExperimentalCoroutinesApi` 
+since `kotlinx-coroutines-test` is still experimental and the API might change. 
+If you don't do this, you'll get a lint warning.
 
-Thanks for your reading.
+`runBlockingTest` handles both running the code deterministically and providing a synchronization mechanism. 
+
+`runBlockingTest` takes in a block of code and blocks the test thread until all of the coroutines it starts are finished. 
+It also runs the code in the coroutines immediately (skipping any calls to delay) and in the order they are called–-in short, 
+it runs them in a deterministic order.
+
+`runBlockingTest` essentially makes your coroutines run like non-coroutines by giving you a coroutine context specifically for test code.
+
+You do this in your tests because it's important that the code runs in the same way every single time (synchronous and deterministic).
+
+
 
