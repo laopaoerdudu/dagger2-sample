@@ -28,7 +28,6 @@ class StatisticsViewModel(
         it?.activeTasksPercent ?: 0f }
     val completedTasksPercent: LiveData<Float> = stats.map { it?.completedTasksPercent ?: 0f }
     val dataLoading: LiveData<Boolean> = _dataLoading
-    val error: LiveData<Boolean> = tasks.map { it is Error }
     val empty: LiveData<Boolean> = tasks.map { (it as? Success)?.data.isNullOrEmpty() }
 
     fun refresh() {
