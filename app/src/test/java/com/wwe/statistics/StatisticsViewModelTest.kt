@@ -4,14 +4,11 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.wwe.MainCoroutineRule
 import com.wwe.data.source.FakeTestRepository
 import com.wwe.getOrAwaitValue
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.pauseDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.resumeDispatcher
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -26,29 +23,19 @@ class StatisticsViewModelTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    // Set the main coroutines dispatcher for unit testing.
     @ExperimentalCoroutinesApi
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    // Subject under test
     private lateinit var statisticsViewModel: StatisticsViewModel
 
-    // Use a fake repository to be injected into the viewmodel
     private lateinit var tasksRepository: FakeTestRepository
-
 
     @Before
     fun setUp() {
         // We initialise the repository with no tasks
         tasksRepository = FakeTestRepository()
-
         statisticsViewModel = StatisticsViewModel(tasksRepository)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test
@@ -64,14 +51,14 @@ class StatisticsViewModelTest {
     }
 
     @Test
-    fun loadTasks_loading() {
-        // Pause dispatcher so we can verify initial values
+    fun testRefresh_dataLoading_statuChange() {
+        // Given
         mainCoroutineRule.pauseDispatcher()
 
-        // Load the task in the viewmodel
+        // When
         statisticsViewModel.refresh()
 
-        // Then progress indicator is shown
+        // Then
         assertThat(statisticsViewModel.dataLoading.getOrAwaitValue(), CoreMatchers.`is`(true))
 
         // Execute pending coroutines actions
