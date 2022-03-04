@@ -51,7 +51,7 @@ class StatisticsViewModelTest {
     }
 
     @Test
-    fun testRefresh_dataLoading_statuChange() {
+    fun testRefresh_dataLoading_stateChange() {
         // Given
         mainCoroutineRule.pauseDispatcher()
 
