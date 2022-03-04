@@ -1,6 +1,7 @@
 package com.wwe.addedittask
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +45,9 @@ class AddEditTaskFragment : Fragment() {
         setupSnackbar()
         setupNavigation()
         this.setupRefreshLayout(viewDataBinding.refreshLayout)
+
+        Log.i("WWE", "AddEditTaskFragment args.taskId -> ${args.taskId}")
+
         viewModel.start(args.taskId)
     }
 
@@ -53,6 +57,9 @@ class AddEditTaskFragment : Fragment() {
 
     private fun setupNavigation() {
         viewModel.taskUpdatedEvent.observe(viewLifecycleOwner, EventObserver {
+
+            Log.i("WWE", "AddEditTaskFragment #onChange invoked")
+
             val action = AddEditTaskFragmentDirections
                 .actionAddEditTaskFragmentToTasksFragment(ADD_EDIT_RESULT_OK)
             findNavController().navigate(action)

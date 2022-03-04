@@ -1,6 +1,7 @@
 package com.wwe.addedittask
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -110,6 +111,8 @@ class AddEditTaskViewModel(application: Application) : AndroidViewModel(applicat
     private fun createTask(newTask: Task) = viewModelScope.launch {
         tasksRepository.saveTask(newTask)
         _taskUpdatedEvent.value = Event(Unit)
+
+        Log.i("WWE", "AddEditTaskViewModel #setValue 115 invoked")
     }
 
     private fun updateTask(task: Task) {
@@ -119,6 +122,8 @@ class AddEditTaskViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch {
             tasksRepository.saveTask(task)
             _taskUpdatedEvent.value = Event(Unit)
+
+            Log.i("WWE", "AddEditTaskViewModel #setValue 126 invoked")
         }
     }
 }
