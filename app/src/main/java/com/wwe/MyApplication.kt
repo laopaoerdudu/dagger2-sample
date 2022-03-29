@@ -1,20 +1,22 @@
 package com.wwe
 
 import android.app.Application
-import com.wwe.di.AppComponent
-import com.wwe.di.DaggerAppComponent
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
+import javax.inject.Inject
 
-// Why defined open, bec for test
-open class MyApplication : Application() {
+class MyApplication : Application(), HasAndroidInjector {
 
-    // Instance of the AppComponent that will be used by all the Activities in the project
-    val appComponent: AppComponent by lazy {
-        initializeComponent()
+    @Inject
+    internal lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
+
+    override fun androidInjector(): AndroidInjector<Any> {
+        return dispatchingAndroidInjector
     }
 
-    open fun initializeComponent(): AppComponent {
-        // Creates an instance of AppComponent using its Factory constructor
-        // We pass the applicationContext that will be used as Context in the graph
-        return DaggerAppComponent.factory().create(applicationContext)
+    override fun onCreate() {
+        super.onCreate()
     }
+
 }
